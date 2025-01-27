@@ -19,11 +19,11 @@ external_hash=$(get_checksum_from_url "${download_url}.sha256" "${release_name}.
 use_checksum_comparison "$archive_path" "$external_hash"
 
 # Install zstd
-apt-get install -y liblz4-dev
+apt-get install liblz4-dev
 tar xzf "$archive_path" -C /tmp
 
-make -C "/tmp/${release_name}/contrib/pzstd" all
-make -C "/tmp/${release_name}" zstd-release
+make -C "/tmp/${release_name}/contrib/pzstd" -j $(nproc) all
+make -C "/tmp/${release_name}" -j $(nproc) zstd-release
 
 for copyprocess in zstd zstdless zstdgrep; do
     cp "/tmp/${release_name}/programs/${copyprocess}" /usr/local/bin/
